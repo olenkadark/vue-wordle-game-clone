@@ -1,5 +1,5 @@
 <template>
-  <app-header @open-stats="showStats = true" @open-settings="showSettings = true" @open-help="showHelp = true"></app-header>
+  <app-header @new-game="newGame(true)" @open-stats="showStats = true" @open-settings="showSettings = true" @open-help="showHelp = true"></app-header>
   <div class="game">
     <div v-for="(row, rowIndex) in guesses" :key="'row-' + rowIndex" class="word-row">
       <div v-for="(char, charIndex) in row" :key="'cell-' + rowIndex + '-' + charIndex"
@@ -43,7 +43,7 @@ import {
   checkWordExists, gameCompleted,
   getDailyWord,
   getLocale,
-  getProgress,
+  getProgress, getRandomWord, resetProgress,
   saveProgress,
   setLocale
 } from "@/services/wordService.js";
@@ -95,7 +95,7 @@ export default {
       const exists = checkWordExists(formattedGuess);
       if (!exists) {
         this.showError(this.t('message.word_does_not_exist'));
-        //return;
+        return;
       }
       this.guesses[this.currentGuessIndex] = [...this.currentGuess];
       this.currentGuess = [];
@@ -214,25 +214,38 @@ export default {
   },
   setup() {
     const { t, locale } = useI18n();
-    const gameData = getProgress();
 
     const currentLocale = ref(getLocale());
-    const dailyWord = ref(getDailyWord());
-    const gameStatus = ref(gameData.status);
-    const guesses = ref(gameData.guesses);
-    const letterStatus = ref(gameData.letterStatus);
-    const GuessIndex = gameData.guesses.findIndex((guess, index) => {
-      return guess.join('') === '' || index === 5;
-    });
-    const currentGuessIndex = ref(GuessIndex);
+    const dailyWord = ref('');
+    const gameStatus = ref('');
+    const guesses = ref([]);
+    const letterStatus = ref('');
+    const currentGuessIndex = ref(0);
 
     const changeLanguage = () => {
       setLocale(currentLocale.value);
       locale.value = currentLocale.value;
     };
-    changeLanguage();
+    const newGame = (random = false) => {
+      let gameData = getProgress();
+      dailyWord.value = getDailyWord();
+      if(random){
+        dailyWord.value = getRandomWord();
+        gameData = resetProgress();
+      }
 
-    return { dailyWord, currentLocale, changeLanguage, t, gameStatus, guesses, letterStatus, currentGuessIndex};
+      const GuessIndex = gameData.guesses.findIndex((guess, index) => {
+        return guess.join('') === '' || index === 5;
+      });
+      gameStatus.value   = gameData.status;
+      guesses.value      = gameData.guesses;
+      letterStatus.value = gameData.letterStatus;
+      currentGuessIndex.value = GuessIndex;
+    };
+    changeLanguage();
+    newGame();
+
+    return { dailyWord, currentLocale, changeLanguage, newGame, t, gameStatus, guesses, letterStatus, currentGuessIndex};
   }
 };
 </script>

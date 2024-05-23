@@ -1,7 +1,10 @@
 <template>
   <header class="app-header">
+    <img src="@/assets/logo.png" alt="App Logo" class="logo" />
     <nav>
-
+      <button @click="newGame" class="icon-button">
+        <img src="@/assets/reload-icon.svg" alt="New Game" />
+      </button>
       <button @click="openStatsModal" class="icon-button">
         <img src="@/assets/stats-icon.svg" alt="Stats" />
       </button>
@@ -25,6 +28,9 @@ export default {
     openSettings() {
       this.$emit('open-settings');
     },
+    newGame() {
+      this.$emit('new-game');
+    },
     openHelp() {
       this.$emit('open-help');
     }
@@ -43,7 +49,7 @@ export default {
 }
 
 .logo {
-  height: 50px; /* Adjust based on your logo's design */
+  height: 38px; /* Adjust based on your logo's design */
 }
 
 .icon-button {

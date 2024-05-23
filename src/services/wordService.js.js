@@ -33,6 +33,17 @@ export const getDailyWord = () => {
     storeWordInLocalStorage(newWord);
     return newWord[getLocale()];
 };
+export const getRandomWord = () => {
+    const words = validWords[getLocale()];
+    const randomIndex = Math.floor(Math.random() * words.length); // Generate a random index
+
+    let newWord = {};
+    for (const [index, words] of Object.entries(validWords)) {
+        newWord[index] = words[randomIndex].toUpperCase();
+    }
+    storeWordInLocalStorage(newWord);
+    return newWord[getLocale()];
+};
 
 export const checkWordExists = (word) => {
     const words = validWords[getLocale()];
@@ -70,7 +81,13 @@ export const getProgress = () => {
             return data;
         }
     }
-    gameData = {
+    return resetProgress();
+}
+
+
+export const resetProgress = () => {
+    const today  = getDateNow();
+    const gameData = {
         date: today,
         data: {
             status : 'INPROGRESS',
@@ -81,6 +98,8 @@ export const getProgress = () => {
     saveProgress(gameData);
     return gameData.data;
 }
+
+
 
 const saveStats = (gameStats) => {
     localStorage.setItem('gameStats', JSON.stringify(gameStats));
