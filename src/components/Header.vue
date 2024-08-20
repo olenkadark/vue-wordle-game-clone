@@ -46,6 +46,9 @@ export default {
   padding: 10px 20px;
   background-color: #f8f8f8;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
 .logo {

@@ -8,7 +8,7 @@ export const keyboards = {
     ua: [
         ['\'', 'Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ї'],
         ['Ф', 'І', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Є'],
-        ['Enter', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', 'Backspace']
+        ['Enter', 'Ґ', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', 'Backspace']
     ]
 }
 export const validWords = {
@@ -18,6 +18,9 @@ export const validWords = {
 const messages = {
     en: {
         message: {
+            word: "Word",
+            you_win: "Congratulations, you won!",
+            you_fail: "Unfortunately, you didn't win.",
             word_does_not_exist: "Word does not exist.",
             not_enough_letters: "There are not enough letters.",
             game_statistics: "Game Statistics",
@@ -34,12 +37,14 @@ const messages = {
             original_author: "Author of the original game: Josh Wardle. You can play in English here",
             when_wait: "While you're waiting for the next WORD, come and ",
             read_news: "read the news",
-
-
+            game_result: "Game Result",
         }
     },
     ua: {
         message: {
+            word: "Слово",
+            you_win: "Вітаю, ви виграли!",
+            you_fail: "Нажаль вам не вдалося виграти.",
             word_does_not_exist: "Слова не існує.",
             not_enough_letters: "Не вистачає букв",
             game_statistics: "Статистика гри",
@@ -57,6 +62,7 @@ const messages = {
             when_wait: "Доки чекаєш наступне СЛОВО, заходь",
             read_news: "почитати новини",
             developer: "Ця гра є українською версією. Розроблена",
+            game_result: "Результат гри",
         }
     }
 };

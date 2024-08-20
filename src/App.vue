@@ -1,10 +1,12 @@
 <template>
-  <app-header @new-game="newGame(true)" @open-stats="showStats = true" @open-settings="showSettings = true" @open-help="showHelp = true"></app-header>
   <div class="game">
-    <div v-for="(row, rowIndex) in guesses" :key="'row-' + rowIndex" class="word-row">
-      <div v-for="(char, charIndex) in row" :key="'cell-' + rowIndex + '-' + charIndex"
-           :class="cellClass(char, charIndex, rowIndex)">
-        {{ char }}
+    <app-header @new-game="newGame(true)" @open-stats="showStats = true" @open-settings="showSettings = true" @open-help="showHelp = true"></app-header>
+    <div class="gameboard">
+      <div v-for="(row, rowIndex) in guesses" :key="'row-' + rowIndex" class="word-row">
+        <div v-for="(char, charIndex) in row" :key="'cell-' + rowIndex + '-' + charIndex"
+             :class="cellClass(char, charIndex, rowIndex)">
+          {{ char }}
+        </div>
       </div>
     </div>
     <div class="keyboard">
@@ -28,6 +30,15 @@
     </div>
     <game-toast ref="toast" type="error" :message="error"></game-toast>
   </div>
+  <modal :isVisible="showGameResult" @close="showGameResult = false" :title="t('message.game_result')">
+    <div style="justify-content: center; display: flex; flex-direction: column; align-items: center;">
+      <img v-if="gameStatus === 'WIN'" style="max-width: 200px; width: 100%;" src="./assets/images/you-win.png" alt="You Win">
+      <p v-if="gameStatus === 'FAIL'">{{t('message.you_fail')}}</p>
+      <h3 v-if="gameStatus === 'WIN'">{{t('message.you_win')}}</h3>
+      <p>{{t('message.word')}}: <b>{{dailyWord}}</b></p>
+      <game-stats ref="stats"></game-stats>
+    </div>
+  </modal>
   <modal :isVisible="showStats" @close="showStats = false" :title="t('message.game_statistics')">
     <game-stats ref="stats"></game-stats>
   </modal>
@@ -67,6 +78,7 @@ export default {
       allowedGuessesCount: 6,
       error: '',
       animate: false,
+      showGameResult: false,
       showStats: false,
       showSettings: false,
       showHelp: false,
@@ -203,7 +215,7 @@ export default {
       saveProgress(gameData);
       if( this.gameStatus !== 'INPROGRESS'){
         gameCompleted(this.gameStatus === 'WIN');
-        this.showStats = true;
+        this.showGameResult = true;
       }
     }
   },
@@ -254,20 +266,30 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
   position: relative;
   width: 100%;
-  height: 600px;
+}
+.gameboard{
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.keyboard{
+  width: 100%;
+  max-width: 600px;
 }
 .word-row {
   display: grid;
-  grid-template-columns: repeat(5, 3rem);
+  grid-template-columns: repeat(5, 4rem);
   gap: 5px;
   margin-bottom: 5px;
 }
 .word-cell {
-  width: 3rem;
-  height: 3rem;
+  width: 4rem;
+  height: 4rem;
   border: 1px solid #ddd;
   display: flex;
   align-items: center;
@@ -298,7 +320,7 @@ export default {
   margin: 5px 0;
 }
 .key {
-  height: 36px;
+  height: 55px;
   margin: 2px;
   border: none;
   border-radius: 4px;
@@ -360,6 +382,7 @@ button {
   display: inline-flex;
   background: transparent;
   border: none;
+  touch-action: manipulation;
 }
 button:hover{
   background-color: rgb(229 231 235);
