@@ -8,6 +8,9 @@
       <button @click="openStatsModal" class="icon-button">
         <img src="@/assets/stats-icon.svg" alt="Stats" />
       </button>
+      <button @click="openAchievementsModal" class="icon-button">
+        <img src="@/assets/images/achievement.png" alt="Achievements" />
+      </button>
 <!--      <button @click="openSettings" class="icon-button">
         <img src="@/assets/config-icon.svg" alt="Settings" />
       </button>-->
@@ -24,6 +27,9 @@ export default {
   methods: {
     openStatsModal() {
       this.$emit('open-stats');
+    },
+    openAchievementsModal() {
+      this.$emit('open-achievements');
     },
     openSettings() {
       this.$emit('open-settings');

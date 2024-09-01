@@ -1,8 +1,14 @@
 <template>
   <div class="game">
-    <app-header @new-game="newGame(true)" @open-stats="showStats = true" @open-settings="showSettings = true" @open-help="showHelp = true"></app-header>
+    <app-header
+        @new-game="newGame(true)"
+        @open-stats="showStats = true"
+        @open-settings="showSettings = true"
+        @open-help="showHelp = true"
+        @open-achievements="showAchievements = true"
+    ></app-header>
     <div class="gameboard">
-      <div v-for="(row, rowIndex) in guesses" :key="'row-' + rowIndex" class="word-row">
+      <div v-for="(row, rowIndex) in gameData.guesses" :key="'row-' + rowIndex" class="word-row">
         <div v-for="(char, charIndex) in row" :key="'cell-' + rowIndex + '-' + charIndex"
              :class="cellClass(char, charIndex, rowIndex)">
           {{ char }}
@@ -14,7 +20,7 @@
         <button
             v-for="key in row"
             :key="'key-' + key"
-            :class="['key', letterStatus[key]]"
+            :class="['key', gameData.letterStatus[key]]"
             @click="keyPress(key)"
         >
           <template v-if="key === 'Backspace'">
@@ -32,9 +38,9 @@
   </div>
   <modal :isVisible="showGameResult" @close="showGameResult = false" :title="t('message.game_result')">
     <div style="justify-content: center; display: flex; flex-direction: column; align-items: center;">
-      <img v-if="gameStatus === 'WIN'" style="max-width: 200px; width: 100%;" src="./assets/images/you-win.png" alt="You Win">
-      <p v-if="gameStatus === 'FAIL'">{{t('message.you_fail')}}</p>
-      <h3 v-if="gameStatus === 'WIN'">{{t('message.you_win')}}</h3>
+      <img v-if="gameData.status === 'WIN'" style="max-width: 200px; width: 100%;" src="./assets/images/you-win.png" alt="You Win">
+      <p v-if="gameData.status === 'FAIL'">{{t('message.you_fail')}}</p>
+      <h3 v-if="gameData.status === 'WIN'">{{t('message.you_win')}}</h3>
       <p>{{t('message.word')}}: <b>{{dailyWord}}</b></p>
       <game-stats ref="stats"></game-stats>
     </div>
@@ -43,30 +49,38 @@
     <game-stats ref="stats"></game-stats>
   </modal>
   <modal :isVisible="showHelp" @close="showHelp = false" :title="t('message.rules')">
-    <game-rules ref="stats"></game-rules>
+    <game-rules ref="rules"></game-rules>
+  </modal>
+  <modal :isVisible="showAchievements" @close="showAchievements = false" :title="t('message.achievements')" :size="`xl`">
+    <game-achievements ref="achievements"></game-achievements>
   </modal>
 </template>
 
 <script>
-import { ref} from "vue";
-import { useI18n } from "vue-i18n";
+import {ref} from "vue";
+import {useI18n} from "vue-i18n";
 import {
-  checkWordExists, gameCompleted,
+  checkAchievements,
+  checkWordExists,
+  gameCompleted,
   getDailyWord,
   getLocale,
-  getProgress, getRandomWord, resetProgress,
+  getProgress,
+  getRandomWord,
+  resetProgress,
   saveProgress,
   setLocale
 } from "@/services/wordService.js";
-import { keyboards } from "./i18n";
+import {keyboards} from "./i18n";
+import Modal from "@/components/Modal.vue";
 import GameToast from "@/components/GameToast.vue";
 import GameStats from "@/components/GameStats.vue";
 import AppHeader from "@/components/Header.vue";
-import Modal from "@/components/Modal.vue";
 import GameRules from "@/components/GameRules.vue";
+import GameAchievements from "@/components/GameAchievements.vue";
 
 export default {
-  components: {Modal, AppHeader, GameToast, GameStats, GameRules},
+  components: {Modal, AppHeader, GameToast, GameStats, GameRules, GameAchievements},
   computed: {
     keyboard() {
       return keyboards[this.currentLocale]
@@ -82,45 +96,45 @@ export default {
       showStats: false,
       showSettings: false,
       showHelp: false,
+      showAchievements: false,
     };
   },
   methods: {
     addLetter(letter) {
-      if (this.currentGuess.length < 5 && this.currentGuessIndex < this.allowedGuessesCount && this.gameStatus === 'INPROGRESS') {
+      if (this.currentGuess.length < 5 && this.currentGuessIndex < this.allowedGuessesCount && this.gameData.status === 'INPROGRESS') {
         this.currentGuess.push(letter);
         this.updateCurrentRow();
       }
     },
     removeLetter() {
-      if( this.currentGuessIndex < this.allowedGuessesCount && this.gameStatus === 'INPROGRESS'){
+      if( this.currentGuessIndex < this.allowedGuessesCount && this.gameData.status === 'INPROGRESS'){
         this.currentGuess.pop();
         this.updateCurrentRow();
       }
     },
     submitGuess() {
-      if (this.gameStatus !== 'INPROGRESS' || this.currentGuessIndex >= this.allowedGuessesCount) return;
+      if (this.gameData.status !== 'INPROGRESS' || this.currentGuessIndex >= this.allowedGuessesCount) return;
       if (this.currentGuess.length !== 5 ){
         this.showError(this.t('message.not_enough_letters'));
         return;
       }
       const formattedGuess = this.currentGuess.join('').toUpperCase();
-      const exists = checkWordExists(formattedGuess);
+      const exists = true || checkWordExists(formattedGuess);
       if (!exists) {
         this.showError(this.t('message.word_does_not_exist'));
         return;
       }
-      this.guesses[this.currentGuessIndex] = [...this.currentGuess];
+      this.gameData.guesses[this.currentGuessIndex] = [...this.currentGuess];
       this.currentGuess = [];
       this.currentGuessIndex++;
       this.error = '';
       this.animate = false;
       this.updateLetterStatus();
       if (formattedGuess === this.dailyWord) {
-        this.gameStatus = 'WIN'
+        this.gameData.status = 'WIN'
       }
-
-      if (this.currentGuessIndex === this.allowedGuessesCount && this.gameStatus !== 'WIN') {
-        this.gameStatus = 'FAIL'
+      else if (this.currentGuessIndex === this.allowedGuessesCount) {
+        this.gameData.status = 'FAIL'
       }
       this.saveProgress();
     },
@@ -131,7 +145,7 @@ export default {
       setTimeout(() => this.animate = false, 830);
     },
     updateCurrentRow() {
-      this.guesses[this.currentGuessIndex] = Array(5).fill('').map((_, idx) => this.currentGuess[idx] || '');
+      this.gameData.guesses[this.currentGuessIndex] = Array(5).fill('').map((_, idx) => this.currentGuess[idx] || '');
     },
     keyPress(key) {
       if (key === 'Enter') {
@@ -152,7 +166,7 @@ export default {
         // To ensure that the letter is not counted more than once,
         // check that it's not correctly placed elsewhere in the same word at or before this index.
         let targetOccurrences = correctWordArray.filter(x => x === letter).length;
-        let guessOccurrencesBefore = this.guesses[guessIndex].slice(0, index + 1).filter(x => x === letter).length;
+        let guessOccurrencesBefore = this.gameData.guesses[guessIndex].slice(0, index + 1).filter(x => x === letter).length;
         if (guessOccurrencesBefore > targetOccurrences) {
           return 'incorrect';
         }
@@ -178,49 +192,46 @@ export default {
     },
     updateLetterStatus() {
       const correctWordArray = this.dailyWord.split('');
-      this.letterStatus = {}; // Reset for fresh calculation
+      this.gameData.letterStatus = {}; // Reset for fresh calculation
 
-      this.guesses.forEach(guess => {
+      this.gameData.guesses.forEach(guess => {
         let localCorrect = [...correctWordArray]; // Local copy to manage repeated letters
         guess.forEach((char, index) => {
           if (!char) return; // Skip empty
 
           // First pass: Check for correct placements
           if (char === localCorrect[index]) {
-            this.letterStatus[char] = 'correct';
+            this.gameData.letterStatus[char] = 'correct';
             localCorrect[index] = null; // Remove from consideration
           }
         });
 
         guess.forEach((char) => {
-          if (!char || this.letterStatus[char] === 'correct') return; // Skip if already marked correct
+          if (!char || this.gameData.letterStatus[char] === 'correct') return; // Skip if already marked correct
 
           // Second pass: Check if the letter is correct but misplaced
           if (localCorrect.includes(char)) {
-            this.letterStatus[char] = 'wrong-place';
+            this.gameData.letterStatus[char] = 'wrong-place';
             localCorrect[localCorrect.indexOf(char)] = null; // Mark as used
-          } else if (!this.letterStatus[char]) {
+          } else if (!this.gameData.letterStatus[char]) {
             // Mark as incorrect if not already marked in previous guesses
-            this.letterStatus[char] = 'incorrect';
+            this.gameData.letterStatus[char] = 'incorrect';
           }
         });
       });
     },
     saveProgress() {
-      const gameData = {
-        status : this.gameStatus,
-        guesses : this.guesses,
-        letterStatus: this.letterStatus
-      }
-      saveProgress(gameData);
-      if( this.gameStatus !== 'INPROGRESS'){
-        gameCompleted(this.gameStatus === 'WIN');
+      this.gameData.dateTime = new Date().toISOString();
+      saveProgress(this.gameData);
+      if( this.gameData.status !== 'INPROGRESS'){
+        gameCompleted(this.gameData);
+        checkAchievements();
         this.showGameResult = true;
       }
     }
   },
   created() {
-    if( this.gameStatus !== 'INPROGRESS'){
+    if( this.gameData.status !== 'INPROGRESS'){
       this.showStats = true;
     }
   },
@@ -229,9 +240,7 @@ export default {
 
     const currentLocale = ref(getLocale());
     const dailyWord = ref('');
-    const gameStatus = ref('');
-    const guesses = ref([]);
-    const letterStatus = ref('');
+    const gameData = ref(getProgress());
     const currentGuessIndex = ref(0);
 
     const changeLanguage = () => {
@@ -239,25 +248,22 @@ export default {
       locale.value = currentLocale.value;
     };
     const newGame = (random = false) => {
-      let gameData = getProgress();
-      dailyWord.value = getDailyWord();
       if(random){
         dailyWord.value = getRandomWord();
-        gameData = resetProgress();
+        gameData.value = resetProgress();
+      }else{
+        dailyWord.value = getDailyWord();
+        gameData.value = getProgress();
       }
 
-      const GuessIndex = gameData.guesses.findIndex((guess, index) => {
+      currentGuessIndex.value = gameData.value.guesses.findIndex((guess, index) => {
         return guess.join('') === '' || index === 5;
       });
-      gameStatus.value   = gameData.status;
-      guesses.value      = gameData.guesses;
-      letterStatus.value = gameData.letterStatus;
-      currentGuessIndex.value = GuessIndex;
     };
     changeLanguage();
     newGame();
 
-    return { dailyWord, currentLocale, changeLanguage, newGame, t, gameStatus, guesses, letterStatus, currentGuessIndex};
+    return { dailyWord, currentLocale, changeLanguage, newGame, t, gameData, currentGuessIndex};
   }
 };
 </script>

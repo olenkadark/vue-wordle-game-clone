@@ -38,6 +38,7 @@ const messages = {
             when_wait: "While you're waiting for the next WORD, come and ",
             read_news: "read the news",
             game_result: "Game Result",
+            achievements: "Achievements",
         }
     },
     ua: {
@@ -63,6 +64,7 @@ const messages = {
             read_news: "почитати новини",
             developer: "Ця гра є українською версією. Розроблена",
             game_result: "Результат гри",
+            achievements: "Досягнення",
         }
     }
 };

@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="modal-overlay" v-if="isVisible" @click.self="closeModal">
-      <div class="modal-content">
+      <div class="modal-content" :class="{large: size === 'xl'}">
         <div class="modal-header">
           <h2 class="modal-title">{{ title }}</h2>
           <button type="button" class="modal-close-icon" @click="closeModal">
@@ -19,7 +19,11 @@ export default {
   name: "AppModal",
   props: {
     isVisible: Boolean,
-    title: String
+    title: String,
+    size: {
+      type: String,
+      default: 'md'
+    },
   },
   methods: {
     closeModal() {
@@ -59,6 +63,9 @@ export default {
   max-height: 90%;
   overflow-y: auto;
   position: relative;
+}
+.modal-content.large{
+  width: 100% !important;
 }
 .modal-header{
   padding: 0 0 15px 0;
