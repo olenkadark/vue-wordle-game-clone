@@ -6,8 +6,6 @@ const images = importAll(require.context('@/assets/images/achievements', false, 
 export const achievements = [
     {
         id: "first_word",
-        title: "First Word!",
-        description: "Successfully solve your first puzzle.",
         image: images[0],
         validate(stats) {
             return stats.countWins >= 1;
@@ -15,8 +13,6 @@ export const achievements = [
     },
     {
         id: "rookie_riddler",
-        title: "Rookie Riddler",
-        description: "Solve your first 10 puzzles.",
         image: images[1],
         validate(stats) {
             return stats.countWins >= 10;
@@ -24,8 +20,6 @@ export const achievements = [
     },
     {
         id: "puzzle_pro",
-        title: "Puzzle Pro",
-        description: "Solve 50 puzzles.",
         image: "",
         validate(stats) {
             return stats.countWins >= 50;
@@ -33,8 +27,6 @@ export const achievements = [
     },
     {
         id: "centurion_solver",
-        title: "Centurion Solver",
-        description: "Solve 100 puzzles.",
         image: "",
         validate(stats) {
             return stats.countWins >= 100;
@@ -42,8 +34,6 @@ export const achievements = [
     },
     {
         id: "epic_enigmatist",
-        title: "Epic Enigmatist",
-        description: "Solve 250 puzzles.",
         image: "",
         validate(stats) {
             return stats.countWins >= 100;
@@ -51,8 +41,6 @@ export const achievements = [
     },
     {
         id: "puzzle_master",
-        title: "Puzzle Master",
-        description: "Solve 500 puzzles.",
         image: "",
         validate(stats) {
             return stats.countWins >= 100;
@@ -60,8 +48,6 @@ export const achievements = [
     },
     {
         id: "word_wizard",
-        title: "Word Wizard",
-        description: "Solve 1,000 puzzles.",
         image: "",
         validate(stats) {
             return stats.countWins >= 1000;
@@ -69,8 +55,6 @@ export const achievements = [
     },
     {
         id: "master_of_words",
-        title: "Master of Words",
-        description: "Celebrate your mastery by winning 1,500 games.",
         image: "",
         validate(stats) {
             return stats.countWins >= 1500;
@@ -78,8 +62,6 @@ export const achievements = [
     },
     {
         id: "newcomer",
-        title: "Newcomer",
-        description: "Play 10 games.",
         image: "",
         validate(stats) {
             return stats.playedGames >= 10;
@@ -87,8 +69,6 @@ export const achievements = [
     },
     {
         id: "engaged_player",
-        title: "Engaged Player",
-        description: "Play 50 games.",
         image: "",
         validate(stats) {
             return stats.playedGames >= 50;
@@ -96,8 +76,6 @@ export const achievements = [
     },
     {
         id: "dedicated_gamer",
-        title: "Dedicated Gamer",
-        description: "Play 100 games.",
         image: "",
         validate(stats) {
             return stats.playedGames >= 100;
@@ -105,8 +83,6 @@ export const achievements = [
     },
     {
         id: "veteran_challenger",
-        title: "Veteran Challenger",
-        description: "Play 250 games.",
         image: "",
         validate(stats) {
             return stats.playedGames >= 250;
@@ -114,8 +90,6 @@ export const achievements = [
     },
     {
         id: "puzzle_enthusiast",
-        title: "Puzzle Enthusiast",
-        description: "Play 500 games.",
         image: "",
         validate(stats) {
             return stats.playedGames >= 500;
@@ -123,8 +97,6 @@ export const achievements = [
     },
     {
         id: "wordle_conqueror",
-        title: "Wordle Conqueror",
-        description: "Play 1,000 games.",
         image: "",
         validate(stats) {
             return stats.playedGames >= 1000;
@@ -132,8 +104,6 @@ export const achievements = [
     },
     {
         id: "wordle_legend",
-        title: "Wordle Legend",
-        description: "Reach a monumental milestone by playing 2,000 games.",
         image: "",
         validate(stats) {
             return stats.playedGames >= 2000;
@@ -141,8 +111,6 @@ export const achievements = [
     },
     {
         id: "strategist",
-        title: "Strategist",
-        description: "Win 10 games in less than 3 attempts.",
         image: "",
         validate(stats) {
             const minAttempts =  Object.keys(stats.gamesData).filter(key => {
@@ -153,8 +121,6 @@ export const achievements = [
     },
     {
         id: "perfectionist",
-        title: "Perfectionist",
-        description: "Achieve a 75% win rate.",
         image: "",
         validate(stats) {
             return stats.percentWins >= 75;
@@ -162,8 +128,6 @@ export const achievements = [
     },
     {
         id: "weeklong_warrior",
-        title: "Weeklong Warrior",
-        description: "Complete a puzzle every day for a week.",
         image: "",
         validate(stats) {
             return stats.consecutiveDays >= 7;
@@ -171,8 +135,6 @@ export const achievements = [
     },
     {
         id: "month_master",
-        title: "Month Master",
-        description: "Solve a puzzle every day for an entire month.",
         image: "",
         validate(stats) {
             return stats.consecutiveDays >= 30;
@@ -180,8 +142,6 @@ export const achievements = [
     },
     {
         id: "word_streak",
-        title: "Word Streak",
-        description: "Guess 5 words correctly in a row without any errors.",
         image: "",
         validate(stats) {
             return stats.currentStreak >= 5;
@@ -189,8 +149,6 @@ export const achievements = [
     },
     {
         id: "flawless_streak",
-        title: "Flawless Streak",
-        description: "Guess 10 words correctly in a row without any errors.",
         image: "",
         validate(stats) {
             return stats.currentStreak >= 10;
@@ -198,8 +156,6 @@ export const achievements = [
     },
     {
         id: "speed_demon",
-        title: "Speed Demon",
-        description: "Solve three puzzles in under three minutes total.",
         image: "",
         validate(stats) {
             return stats.fastSolves >= 3;
@@ -207,8 +163,6 @@ export const achievements = [
     },
     {
         id: "night_owl",
-        title: "Night Owl",
-        description: "Solve 10 puzzles between midnight and 5 a.m.",
         image: "",
         validate(stats) {
             return stats.nightPuzzles >= 10;
@@ -216,8 +170,6 @@ export const achievements = [
     },
     {
         id: "night_shift",
-        title: "Night Shift",
-        description: "Complete 25 puzzles between midnight and 5 a.m.",
         image: "",
         validate(stats) {
             return stats.nightPuzzles >= 25;
@@ -225,50 +177,52 @@ export const achievements = [
     },
     {
         id: "early_bird_solver",
-        title: "Early Bird Solver",
-        description: "Solve 10 puzzles between 5 a.m. and 8 a.m.",
         image: "",
         validate(stats) {
             return stats.morningPuzzles >= 10;
         }
     },
-    /*{
-        id: "halloween_haunt",
-        title: "Halloween Haunt",
-        description: "Solve spooky words related to Halloween",
-        image: "",
-        validate(stats) {
-            return stats.playedHolidayPuzzle.HalloweenHaunt;
-        }
-    },
     {
         id: "ghostly_guesser",
-        title: "Ghostly Guesser",
-        description: "Solve the Halloween puzzle on October 31st.",
         image: "",
         validate(stats) {
-            return stats.playedHolidayPuzzle.Halloween31;
-        }
-    },
-    {
-        id: "christmas_cheer",
-        title: "Christmas Cheer",
-        description: "Focus on festive terms such.",
-        image: "",
-        validate(stats) {
-            return stats.playedHolidayPuzzle.ChristmasCheer;
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);// Zero out time for today
+
+            let currentYear = currentDate.getFullYear();
+            let october31 = new Date(Date.UTC(currentYear, 9, 31));
+            october31.setHours(0, 0, 0, 0); // Zero out time for october31
+
+            if (currentDate.getTime() < october31.getTime()) return false;
+
+            return stats.gamesData.filter(data => {
+                let dateFromString = new Date(data.dateTime);
+                dateFromString.setHours(0, 0, 0, 0); // Zero out time for date from string
+                return dateFromString.getTime() === october31.getTime()
+            }).length > 0;
         }
     },
     {
         id: "holiday_spirit",
-        title: "Holiday Spirit",
-        description: "Complete the Christmas puzzle on December 25th",
         image: "",
         validate(stats) {
-            return stats.playedHolidayPuzzle.HolidaySpirit;
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);// Zero out time for today
+
+            let currentYear = currentDate.getFullYear();
+            let december31 = new Date(Date.UTC(currentYear, 11, 25));
+            december31.setHours(0, 0, 0, 0); // Zero out time for december31
+
+            if (currentDate.getTime() < december31.getTime()) return false;
+
+            return stats.gamesData.filter(data => {
+                let dateFromString = new Date(data.dateTime);
+                dateFromString.setHours(0, 0, 0, 0); // Zero out time for date from string
+                return dateFromString.getTime() === december31.getTime()
+            }).length > 0;
         }
     },
-    {
+    /*{
         id: "new_years_pro",
         title: "New Year's Pro",
         description: "Solve the New Year’s puzzle exactly at midnight.",

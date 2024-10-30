@@ -8,7 +8,7 @@
 
 <script>
 import {useI18n} from "vue-i18n";
-import {getStats} from "@/services/wordService.js";
+import {getStats} from "@/services/wordService";
 import {ref} from "vue";
 
 export default {

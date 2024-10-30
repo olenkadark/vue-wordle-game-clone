@@ -1,12 +1,12 @@
 <template>
   <div class="achievements-container">
     <div class="achievements-grid">
-      <div class="achievement-card" v-for="achievement in achievements" :key="achievement.id"
-           :class="{ 'unlocked': achievement.unlocked, 'locked': !achievement.unlocked }">
+      <div class="achievement-card"  v-for="achievement in achievements" :key="achievement.id"
+           :class="{ 'unlocked': achievement.unlocked, 'locked': !achievement.unlocked, [achievement.id]: true }">
 <!--        <img :src="achievement.image" :alt="achievement.title" class="achievement-icon">-->
         <div class="achievement-info">
-          <h2>{{ achievement.title }}</h2>
-          <p>{{ achievement.description }}</p>
+          <h2>{{ t('achievements.' + achievement.id) }}</h2>
+          <p>{{ t('achievements.' + achievement.id + '_d') }}</p>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
 import { achievements } from '@/services/achievements';
 import {useI18n} from "vue-i18n";
 import {ref} from "vue";
-import {getStats, getUnlockedAchievements} from "@/services/wordService.js";
+import {getStats, getUnlockedAchievements} from "@/services/wordService";
 export default {
   setup(){
     const { t } = useI18n();
@@ -60,10 +60,6 @@ export default {
   opacity: 0.6;
 }
 
-.achievement-card.unlocked {
-  border-color: #229b99 !important;
-}
-
 .achievement-icon {
   width: 60px; /* Adjust size as needed */
   height: 60px; /* Adjust size as needed */
@@ -85,10 +81,29 @@ export default {
 
 h2 {
   font-size: 18px;
-  color: #229b99;
+  color: #58468C;
 }
-
 p {
   font-size: 14px;
+}
+
+.achievement-card.unlocked {
+  border-color: #58468C !important;
+  background: #58468C;
+}
+
+.achievement-card.unlocked h2,
+.achievement-card.unlocked p{
+  color: #fffffd;
+}
+
+.achievement-card.unlocked.ghostly_guesser {
+  border-color: #FF7518 !important;
+  background: #FF7518;
+}
+
+.achievement-card.unlocked.holiday_spirit {
+  border-color: #D32F2F !important;
+  background: #D32F2F;
 }
 </style>

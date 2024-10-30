@@ -64,7 +64,7 @@ export const getLocale = () => {
 }
 export const saveProgress = (gameData) => {
     if( typeof gameData.startTime === 'undefined'){
-        gameData.startTime = new Date().toISOString();
+        gameData.startTime = (new Date()).toISOString();
     }
     localStorage.setItem('gameData', JSON.stringify(gameData));
 }
@@ -87,7 +87,7 @@ export const resetProgress = () => {
         status : 'INPROGRESS',
         guesses : Array(6).fill(Array(5).fill('')),
         letterStatus: {},
-        startTime : new Date().toISOString(),
+        startTime : (new Date()).toISOString(),
     }
     saveProgress(gameData);
     return gameData;
@@ -95,14 +95,13 @@ export const resetProgress = () => {
 export const checkAchievements = () => {
     const gameStats = getStats();
     const unlockedAchievements = getUnlockedAchievements();
-    const date= new Date();
-    console.log(gameStats);
+    const date= (new Date()).toISOString();
 
     if( unlockedAchievements.length === achievements.length) return;
 
     achievements.forEach(achievement => {
         if (typeof unlockedAchievements[achievement.id] === 'undefined' && achievement.validate(gameStats)){
-            unlockedAchievements[achievement.id] = date.getUTCDate();
+            unlockedAchievements[achievement.id] = date;
         }
     });
     saveUnlockedAchievements(unlockedAchievements);
@@ -142,6 +141,15 @@ export const gameCompleted = (gameData) => {
         const hours = date.getUTCHours();
         return hours >= 5 && hours < 8;
     }).length;
+
+    gameStats.fastSolves = gameStats.gamesData.filter(data => {
+        const startDate= new Date(data.startTime);
+        const endDate= new Date(data.dateTime);
+        const diffMilliseconds = endDate - startDate;
+        const diffMinutes = Math.floor(diffMilliseconds / 1000 / 60);
+        return diffMinutes <= 3;
+    }).length;
+
     if (gameStats.playedGames > 0 && gameStats.countWins > 0) {
         gameStats.percentWins = ((gameStats.countWins / gameStats.playedGames) * 100).toFixed(2);
     }
@@ -219,10 +227,6 @@ export const getStats = () => {
         consecutiveDays: 0,
         currentStreak: 0,
         fastSolves: 0,
-        playedHolidayPuzzle: {
-            holiday: false,
-            february: false,
-        },
         nightPuzzles: 0,
         morningPuzzles: 0,
     }

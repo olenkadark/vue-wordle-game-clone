@@ -221,7 +221,7 @@ export default {
       });
     },
     saveProgress() {
-      this.gameData.dateTime = new Date().toISOString();
+      this.gameData.dateTime = (new Date()).toISOString();
       saveProgress(this.gameData);
       if( this.gameData.status !== 'INPROGRESS'){
         gameCompleted(this.gameData);

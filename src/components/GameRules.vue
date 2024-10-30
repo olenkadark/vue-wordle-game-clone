@@ -6,7 +6,7 @@
     {{ t('message.original_author')}}
   </small></p>
   <p><small>
-    {{ t('message.developer')}} <a href="https://starryarray.com/category/tutorials/">Olena Zhyvohliad</a>
+    {{ t('message.developer')}} <a href="https://github.com/olenkadark">Olena Zhyvohliad</a>
   </small></p>
 
 </template>
