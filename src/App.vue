@@ -119,7 +119,7 @@ export default {
         return;
       }
       const formattedGuess = this.currentGuess.join('').toUpperCase();
-      const exists = true || checkWordExists(formattedGuess);
+      const exists = checkWordExists(formattedGuess);
       if (!exists) {
         this.showError(this.t('message.word_does_not_exist'));
         return;
